@@ -19,17 +19,34 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 args = None
 
-# list of series to never include
-BLACKLIST = ['Downton Abbey',
-             'Poldark (2015)'
-             ]
+# list of series to include
+WHITELIST = [
+    'Bleach',
+    'Dr. Stone',
+    'Futurama',
+    'How I Met Your Mother',
+    "JoJo's Bizarre Adventure",
+    'Jujutsu Kaisen',
+    'Knight Rider',
+    'Mob Psycho 100',
+    'The Promised Neverland',
+    'Mr. Robot',
+    'My Hero Academia',
+    'Neon Genesis Evangelion',
+    'Regular Show',
+    'Resident Alien',
+    'Silicon Valley',
+    'Teen Titans',
+    'The Witcher',
+    'Unus Annus'
+]
 
 
 def get_args():
     parser = argparse.ArgumentParser(description='Create playlist of unwatched episodes from random shows '
                                                  'but in correct episode order.')
-    parser.add_argument('--name', help='Playlist Name', default='Random Season, Next Unwatched')
-    parser.add_argument('--number', '-n', help='Number of episodes to add to play list', type=int, default=10)
+    parser.add_argument('--name', help='Playlist Name', default='Shuffled Shows in Order')
+    parser.add_argument('--number', '-n', help='Number of episodes to add to play list', type=int, default=30)
     group_server = parser.add_argument_group('Server Connection Method')
     group_server.add_argument('--server', action='store_true', help='Server connection Method')
     group_server.add_argument('--baseurl', '-b', help='Base URL of Server')
@@ -48,7 +65,7 @@ def get_args():
     return parser.parse_args()
 
 
-def get_random_episodes(all_shows, n=10):
+def get_random_episodes(all_shows, n=30):
     show_episodes = dict()
     for show in all_shows.all():
         if args.include_watched is True:
@@ -61,8 +78,8 @@ def get_random_episodes(all_shows, n=10):
 
         if show.isWatched and args.include_watched is not True:
             continue
-        if show.title in BLACKLIST:
-            logger.debug(f'GET_EPISODES: Show Blacklisted: {show.title}')
+        if show.title not in WHITELIST:
+            logger.debug(f'GET_EPISODES: Show Not Whitelisted: {show.title}')
             continue
         if args.include_watched is True:
             show_episodes[show.title] = show.episodes()
