@@ -19,6 +19,11 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 args = None
 
+# list of series to exclude
+BLACKLIST = [
+
+]
+
 # list of series to include
 WHITELIST = [
     'Bleach',
@@ -45,7 +50,7 @@ WHITELIST = [
 def get_args():
     parser = argparse.ArgumentParser(description='Create playlist of unwatched episodes from random shows '
                                                  'but in correct episode order.')
-    parser.add_argument('--name', help='Playlist Name', default='Shuffled Shows in Order')
+    parser.add_argument('--name', help='Playlist Name', default='TEST')
     parser.add_argument('--number', '-n', help='Number of episodes to add to play list', type=int, default=30)
     group_server = parser.add_argument_group('Server Connection Method')
     group_server.add_argument('--server', action='store_true', help='Server connection Method')
@@ -78,7 +83,10 @@ def get_random_episodes(all_shows, n=30):
 
         if show.isWatched and args.include_watched is not True:
             continue
-        if show.title not in WHITELIST:
+        if show.title in BLACKLIST:
+            logger.debug(f'GET_EPISODES: Show Blacklisted: {show.title}')
+            continue
+        if show.title not in WHITELIST and len(WHITELIST) != 0:
             logger.debug(f'GET_EPISODES: Show Not Whitelisted: {show.title}')
             continue
         if args.include_watched is True:
