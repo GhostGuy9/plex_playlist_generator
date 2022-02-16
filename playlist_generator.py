@@ -50,7 +50,7 @@ WHITELIST = [
 def get_args():
     parser = argparse.ArgumentParser(description='Create playlist of unwatched episodes from random shows '
                                                  'but in correct episode order.')
-    parser.add_argument('--name', help='Playlist Name', default='TEST')
+    parser.add_argument('--name', help='Playlist Name', default='Shuffled Shows in Order')
     parser.add_argument('--number', '-n', help='Number of episodes to add to play list', type=int, default=30)
     group_server = parser.add_argument_group('Server Connection Method')
     group_server.add_argument('--server', action='store_true', help='Server connection Method')
